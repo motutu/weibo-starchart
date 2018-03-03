@@ -7,6 +7,7 @@ import json
 import logging
 import pathlib
 import re
+import subprocess
 import urllib.parse
 
 import arrow
@@ -69,12 +70,12 @@ def _normalize_name(s):
     return s.strip().replace('SNH48', '').replace('-', '').replace('_', '')
 
 
-def parse_individual_chart(name, obj):
+def parse_individual_chart(account, obj):
     buf = io.StringIO()
 
     def walk(o):
         if isinstance(o, dict):
-            if 'screen_name' in o and name in o['screen_name']:
+            if 'screen_name' in o and account.name in o['screen_name']:
                 if 'verified_type_ext' in o:
                     goldv = o['verified_type_ext'] == 1
                     print('状态:{}'.format('金V' if goldv else '黄V'), file=buf)
@@ -92,7 +93,10 @@ def parse_individual_chart(name, obj):
             if 'rank' in o and 'user' in o and 'data' in o:
                 rank = o['rank']
                 user = o['user']
-                if name in user.get('screen_name', ''):
+                if account.name in user.get('screen_name', ''):
+                    if account.chart_id != 6:
+                        # This account is on a different chart than 新星榜.
+                        rank = '-'
                     print(f'新星榜排名:{rank}', file=buf)
 
             if 'item_desc' in o and 'item_title' in o:
@@ -115,14 +119,19 @@ def parse_individual_chart(name, obj):
         else:
             return
 
-    print(f'成员:{name}', file=buf)
+    print(f'成员:{account.name}', file=buf)
     walk(obj)
     s = buf.getvalue()
     assert len(s.splitlines()) == 28
-    with open(DATADIR / f'{name}.txt', 'w', encoding='utf-8') as fp:
+    with open(DATADIR / f'{account.name}.txt', 'w', encoding='utf-8') as fp:
         fp.write(s)
 
     parsed = collections.OrderedDict([line.split(':') for line in s.splitlines()])
+    if account.chart_id != 6:
+        # If this account is not on 新星榜, then all the scores are meaningless.
+        for key, val in parsed.items():
+            if '分' in key or '分' in val:
+                parsed[key] = '-'
     return parsed
 
 
@@ -184,7 +193,7 @@ def main():
     tables = []
     for account in ACCOUNTS:
         obj = get_individual_chart(account)
-        tables.append(parse_individual_chart(account.name, obj))
+        tables.append(parse_individual_chart(account, obj))
 
     with open(DATADIR / 'cmp.csv', 'w', encoding='utf-8') as fp:
         for key in tables[0]:
