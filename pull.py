@@ -237,6 +237,8 @@ def main():
             )),
         ]))
 
+    subprocess.run([HERE / 'shot.js', CHART_DATE.strftime('%Y%m%d')])
+
 
 if __name__ == '__main__':
     main()
