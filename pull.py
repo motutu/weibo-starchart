@@ -202,6 +202,9 @@ def main():
                 print(',%s' % table[key], end='', file=fp)
             print(file=fp)
 
+    with open(DATADIR / 'cmp.csv', encoding='utf-8') as fp:
+        print(fp.read())
+
     obj = get_group_chart()
     ranked_list = parse_group_chart(obj)
 
@@ -209,6 +212,10 @@ def main():
         print(','.join(ranked_list[0].keys()), file=fp)
         for entry in ranked_list:
             print(','.join(entry.values()), file=fp)
+
+    with open(DATADIR / 'group.csv', encoding='utf-8') as fp:
+        print('\n'.join(fp.read().splitlines()[:17]))
+        print()
 
     for index, entry in enumerate(ranked_list):
         if entry['成员'] == '莫寒':
