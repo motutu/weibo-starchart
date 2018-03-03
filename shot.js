@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const childProcess = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
@@ -42,6 +43,11 @@ puppeteer.launch().then(async browser => {
     const shotPath = path.resolve(shotsDir, `${id}.png`);
     await table.screenshot({ path: shotPath });
     console.log(shotPath);
-  };
+    try {
+      childProcess.execFileSync('optipng', [shotPath]);
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
   await browser.close();
 });
