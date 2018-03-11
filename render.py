@@ -56,7 +56,7 @@ HTML_TEMPLATE = jinja2.Template('''\
 <html>
 <head>
   <style>
-    body { margin: 0; }
+    body { margin: 0; font: 16px Times, "Songti SC", serif; }
     table { border-collapse: collapse; margin: 20px; }
     table, th, td { border: 1px solid #bbb; }
     th, td { padding: 1px 5px; text-align: center; white-space: nowrap; }
