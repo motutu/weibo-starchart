@@ -30,11 +30,11 @@ Account = collections.namedtuple('Account', 'name, uid, chart_id')
 ACCOUNTS = [
     Account('莫寒', 3053424305, 6),
     Account('李艺彤', 3700233717, 5),
-    Account('黄婷婷', 3668822213, 6),
+    Account('黄婷婷', 3668822213, 5),
     Account('冯薪朵', 3675868752, 6),
     Account('陆婷', 3669120105, 6),
     Account('赵粤', 3668829440, 6),
-    Account('张语格', 3050783091, 5),
+    Account('张语格', 3050783091, 6),
     Account('许佳琪', 3050737061, 6),
     Account('戴萌', 3050709151, 6),
     Account('孔肖吟', 3058127927, 6),
