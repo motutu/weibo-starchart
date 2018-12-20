@@ -8,6 +8,7 @@ import logging
 import pathlib
 import re
 import subprocess
+import sys
 import urllib.parse
 
 import arrow
@@ -34,13 +35,13 @@ ACCOUNTS = [
     Account('冯薪朵', 3675868752, 6),
     Account('陆婷', 3669120105, 6),
     Account('赵粤', 3668829440, 6),
-    Account('张语格', 3050783091, 6),
     Account('许佳琪', 3050737061, 6),
     Account('戴萌', 3050709151, 6),
-    Account('孔肖吟', 3058127927, 6),
+    Account('钱蓓婷', 3055272517, 6),
     Account('林思意', 3675865547, 6),
     Account('吴哲晗', 3050731261, 6),
-    Account('李宇琪', 3050792913, 6),
+    Account('孔肖吟', 3058127927, 6),
+    Account('张语格', 3050783091, 5),
 ]
 
 CONFIG_FILE = HERE / 'config.ini'
@@ -122,7 +123,9 @@ def parse_individual_chart(account, obj):
     print(f'成员:{account.name}', file=buf)
     walk(obj)
     s = buf.getvalue()
-    assert len(s.splitlines()) == 28
+    if len(s.splitlines()) != 28:
+        print(s)
+        sys.exit('Error: not 28 lines')
     with open(DATADIR / f'{account.name}.txt', 'w', encoding='utf-8') as fp:
         fp.write(s)
 
